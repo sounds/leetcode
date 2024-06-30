@@ -69,10 +69,6 @@ struct TreeNode
 class Solution
 {
 public:
-    /**
-    0_nb
-
-    */
     int binarySearch(const vector<int> &numbers, int target)
     {
         int a = 0, b = numbers.size() - 1;
@@ -102,6 +98,7 @@ public:
     Input: numbers={2, 7, 11, 15}, target=9
     Output: index1=1, index2=2
     **/
+    bool _1 = true;
     vector<int> twoSum(vector<int> &numbers, int target)
     {
         vector<int> ans(2);
@@ -128,7 +125,7 @@ public:
      *     ListNode(int x) : val(x), next(NULL) {}
      * };
      */
-
+    bool _2 = true;
     ListNode *addTwoNumbers(ListNode *l1, ListNode *l2)
     {
         ListNode *ans = NULL;
@@ -182,6 +179,7 @@ public:
     Explanation: The answer is "wke", with the length of 3.
              Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
     **/
+    int _3 = 3;
     int lengthOfLongestSubstring(string s)
     {
         if (s.length() == 0)
@@ -211,7 +209,7 @@ public:
     There are two sorted arrays A and B of size m and n respectively. Find the median of the two sorted arrays.
     The overall run time complexity should be O(log (m+n)).
     **/
-
+    bool _4 = true;
     double findMedianSortedArrays(vector<int> &nums1, vector<int> &nums2)
     {
         int m = nums1.size(), n = nums2.size();
@@ -333,7 +331,7 @@ public:
     Input: "cbbd"
     Output: "bb"
     **/
-
+    bool _5 = true;
     void palindrome(const char cs[], int len[], int n)
     { // len[i] means the max palindrome length centered i/2
         for (int i = 0; i < n * 2; ++i)
@@ -2863,7 +2861,34 @@ public:
         // cout << "ans：" << ans << endl;
         return ans + countDigitOne(remain);
     }
-
+    //
+    bool _236 = true;
+    TreeNode *wlowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
+    {
+        vector<TreeNode *> vp, vq;
+        DFS_236(root, p, vp);
+        DFS_236(root, q, vq);
+        auto len = min(vp.size(), vq.size());
+        cout << len << endl;
+        for (auto i = 0; i < len; i++)
+        {
+            if (i == len - 1 || vp[i + 1] != vq[i + 1])
+                return vp[i];
+        }
+        return root;
+    }
+    bool DFS_236(TreeNode *root, TreeNode *p, vector<TreeNode *> &v)
+    {
+        if (root == NULL)
+            return false;
+        v.push_back(root);
+        if (root == p)
+            return true;
+        if (DFS_236(root->left, p, v) || DFS_236(root->right, p, v))
+            return true;
+        v.pop_back();
+        return false;
+    }
     /**
     238. Product of Array Except Self
     Given an array nums of n integers where n > 1,
@@ -3035,6 +3060,7 @@ public:
         1 is typically treated as an ugly number.
         n does not exceed 1690.
     **/
+    bool _264 = true;
     int nthUglyNumber(int n)
     {
         vector<int> num;
@@ -3655,6 +3681,7 @@ public:
     abbr consists of lowercase English letters and digits.
     All the integers in abbr will fit in a 32-bit integer.
     */
+    bool _408 = true;
     bool validWordAbbreviation(string word, string abbr)
     {
         size_t j = 0;
@@ -4635,6 +4662,39 @@ public:
         }
         return ans.size();
     }
+    /*
+    938. Range Sum of BST
+    Given the root node of a binary search tree and two integers low and high, return the sum of values of all nodes with a value in the inclusive range [low, high].
+
+    Example 1:
+    Input: root = [10,5,15,3,7,null,18], low = 7, high = 15
+    Output: 32
+    Explanation: Nodes 7, 10, and 15 are in the range [7, 15]. 7 + 10 + 15 = 32.
+
+    Example 2:
+
+    Input: root = [10,5,15,3,7,13,18,1,null,6], low = 6, high = 10
+    Output: 23
+    Explanation: Nodes 6, 7, and 10 are in the range [6, 10]. 6 + 7 + 10 = 23.
+
+    Constraints:
+
+    The number of nodes in the tree is in the range [1, 2 * 104].
+    1 <= Node.val <= 105
+    1 <= low <= high <= 105
+    All Node.val are unique.
+
+    */
+    // #define _938 938
+    int rangeSumBST(TreeNode *root, int low, int high)
+    {
+        if (root == NULL)
+            return 0;
+        int v = 0;
+        if (root->val >= low && root->val <= high)
+            v = root->val;
+        return v + rangeSumBST(root->left, low, high) + rangeSumBST(root->right, low, high);
+    }
 
     /**
     946. Validate Stack Sequences
@@ -4718,6 +4778,7 @@ public:
     -10000 < points[i][1] < 10000
 
     **/
+    bool _973 = true;
     static bool EuclideanCmp(const vector<int> &a, const vector<int> &b)
     {
         return a[0] * a[0] + a[1] * a[1] < b[0] * b[0] + b[1] * b[1];
