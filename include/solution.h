@@ -19,6 +19,7 @@
 #include <cstring>
 #include <cmath>
 
+
 using namespace std;
 
 struct ListNode
@@ -3805,6 +3806,32 @@ public:
         return a[0];
     }
     */
+    
+    bool _543 = true;
+    int diameterOfBinaryTree(TreeNode* root) {
+        int res = 0;
+        slove_543(root, res);
+        return res;
+        
+    }
+
+    // int slove_543(TreeNode* root, int &res) {
+    //     if(root == NULL) return -1;
+    //     int l = slove_543(root->left, res) + 1;
+    //     int r = slove_543(root->right, res) + 1;
+    //     res = max(l + r, res);
+    //     cout << res << endl;
+    //     return max(l, r);
+    // }
+
+    int slove_543(TreeNode* root, int &res) {
+        if(root == NULL) return 0;
+        int l = slove_543(root->left, res);
+        int r = slove_543(root->right, res);
+        res = max(l + r, res);
+        cout << res << endl;
+        return max(l, r) + 1;
+    }
 
     /**
     560. Subarray Sum Equals K
