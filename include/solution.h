@@ -1966,6 +1966,40 @@ public:
         long v = LONG_MIN;
         return dfs_inorder_98(root, v);
     }
+    /*
+    100. Same Tree
+    Given the roots of two binary trees p and q, write a function to check if they are the same or not.
+
+    Two binary trees are considered the same if they are structurally identical, and the nodes have the same value.
+
+    Example 1:
+
+    Input: p = [1,2,3], q = [1,2,3]
+    Output: true
+    Example 2:
+
+    Input: p = [1,2], q = [1,null,2]
+    Output: false
+    Example 3:
+
+    Input: p = [1,2,1], q = [1,1,2]
+    Output: false
+    
+
+    Constraints:
+
+    The number of nodes in both trees is in the range [0, 100].
+    -104 <= Node.val <= 104
+    */
+    bool _100 = true;
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        if (p && !q || q && !p)  return false;
+        if (!q && !q)  return true;
+        if (q->val != p->val)   return false;
+        return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
+    }
+
+
     /**
     101. Symmetric Tree
     Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
@@ -2379,6 +2413,68 @@ public:
         return min_element(ans.begin(), ans.end())[0];
     }
 
+    /*
+    129. Sum Root to Leaf Numbers
+    You are given the root of a binary tree containing digits from 0 to 9 only.
+
+    Each root-to-leaf path in the tree represents a number.
+
+    For example, the root-to-leaf path 1 -> 2 -> 3 represents the number 123.
+    Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer.
+
+    A leaf node is a node with no children.
+
+    Example 1:
+
+    Input: root = [1,2,3]
+    Output: 25
+    Explanation:
+    The root-to-leaf path 1->2 represents the number 12.
+    The root-to-leaf path 1->3 represents the number 13.
+    Therefore, sum = 12 + 13 = 25.
+    Example 2:
+
+    Input: root = [4,9,0,5,1]
+    Output: 1026
+    Explanation:
+    The root-to-leaf path 4->9->5 represents the number 495.
+    The root-to-leaf path 4->9->1 represents the number 491.
+    The root-to-leaf path 4->0 represents the number 40.
+    Therefore, sum = 495 + 491 + 40 = 1026.
+    
+
+    Constraints:
+
+    The number of nodes in the tree is in the range [1, 1000].
+    0 <= Node.val <= 9
+    The depth of the tree will not exceed 10.
+    */
+    bool _129 = true;
+    int sumNumbers(TreeNode* root) {
+        string s = "";
+        int res = 0;
+        solve_129(root, s, res);
+        return res;
+    }
+    void solve_129(TreeNode* root, string &s, int &res) {
+        s += ('0' + root->val);
+        if (root->left == NULL && root->right == NULL) { 
+            res += atoi(s.c_str());
+            cout << s << endl;
+            return ;
+        }
+        
+        if (root->left) {
+            solve_129(root->left, s, res);
+            s = s.substr(0, s.length() - 1);
+        }
+        if (root->right) {
+            solve_129(root->right, s, res);
+            s = s.substr(0, s.length() - 1);
+        }
+        return;
+    }
+
     /**
     138. Copy List with Random Pointer
     A linked list is given such that each node contains an additional random pointer which could point to any node in the list or null.
@@ -2601,6 +2697,58 @@ public:
         k %= nums.size();
         std::rotate(nums.begin(), nums.end() - k, nums.end());
     }
+    /*
+    199. Binary Tree Right Side View
+    Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
+
+    Example 1:
+
+    Input: root = [1,2,3,null,5,null,4]
+    Output: [1,3,4]
+    Example 2:
+
+    Input: root = [1,null,3]
+    Output: [1,3]
+    Example 3:
+
+    Input: root = []
+    Output: []
+    
+    Constraints:
+
+    The number of nodes in the tree is in the range [0, 100].
+    -100 <= Node.val <= 100
+    */
+    bool _199 = true;
+    vector<int> rightSideView(TreeNode* root) {
+        vector<int> res;
+        if (root == NULL)   return res;
+
+        queue<TreeNode*> q;
+        q.push(NULL);
+        q.push(root);
+        while(!q.empty()) {
+            bool flag = false;
+            if(q.front() == NULL) {
+                q.pop();
+                q.push(NULL);
+                flag = true;
+            } 
+            auto now = q.front();
+            if(now == NULL) break;
+            q.pop();
+            cout << now->val << endl;
+            if(flag)  
+                res.push_back(now->val);
+            if(now->right)
+                q.push(now->right);
+            if(now->left)
+                q.push(now->left);
+        }
+        return res;
+
+    }
+
     /***
     200. Number of Islands
     Given a 2d grid map of '1's (land) and '0's (water), count the number of islands.
@@ -3205,6 +3353,56 @@ public:
         //        }
         //        return string(vec.begin(), vec.end());
     }
+    /*
+    */
+    bool _270 = true;
+    int closestValue(TreeNode* root, double target) {
+        int res = root->val;
+        while(root) {
+            if(res == target)
+                return res;
+            if (abs(root->val - target) < abs(res- target))
+                res = root->val;
+            if (abs(root->val -target) == abs(res - target))
+                res = min(res, root->val);
+
+            if(target < root->val)
+                root = root->left;
+            else 
+                root = root->right;
+        }
+        return res;
+
+    }
+    // int closestValue(TreeNode* root, double target) {
+    //     int res = root->val;
+    //     solve_270(root,target, res);
+    //     return res;
+
+
+    // }
+    void solve_270(TreeNode* root, double target, int &res) {
+        if (root == NULL)
+            return;
+        double gap = root->val - target;
+        if (gap == 0) {
+            res = root->val;
+            return;
+        }
+        if(abs(gap) < abs(res - target)) {
+            res = root->val;
+        }
+        if (abs(gap) == abs(res - target)) {
+            res = min(res, root->val);
+        }
+
+        if (gap < 0) {
+            solve_270(root->right, target, res);
+        } else {
+            solve_270(root->left, target, res);
+        }
+        return;
+    }
 
     /**
     273. Integer to English Words
@@ -3639,7 +3837,18 @@ public:
             swap(s[i], s[s.size() - i - 1]);
         }
     }
-
+    /**/
+    bool _404 = true;
+    int sumOfLeftLeaves(TreeNode* root) {
+        return solve_404(root, NULL);
+        
+    }
+    int solve_404(TreeNode* root, TreeNode* parent) {
+        if (root == NULL)   return 0;
+        if(root->left == NULL && root->right == NULL && parent != NULL && parent->left == root)
+            return root->val;
+        return solve_404(root->left, root) + solve_404(root->right, root);
+    }
     /**
     408. Valid Word Abbreviation
     A string can be abbreviated by replacing any number of non-adjacent, non-empty substrings with their lengths. The lengths should not have leading zeros.
@@ -4881,6 +5090,51 @@ public:
     int oddEvenJumps(vector<int> &A)
     {
     }
+    /*
+    979. Distribute Coins in Binary Tree
+    You are given the root of a binary tree with n nodes where each node in the tree has node.val coins. There are n coins in total throughout the whole tree.
+
+    In one move, we may choose two adjacent nodes and move one coin from one node to another. A move may be from parent to child, or from child to parent.
+
+    Return the minimum number of moves required to make every node have exactly one coin.
+
+    Example 1:
+
+    Input: root = [3,0,0]
+    Output: 2
+    Explanation: From the root of the tree, we move one coin to its left child, and one coin to its right child.
+    Example 2:
+
+
+    Input: root = [0,3,0]
+    Output: 3
+    Explanation: From the left child of the root, we move two coins to the root [taking two moves]. Then, we move one coin from the root of the tree to the right child.
+    
+
+    Constraints:
+
+    The number of nodes in the tree is n.
+    1 <= n <= 100
+    0 <= Node.val <= n
+    The sum of all Node.val is n.
+    */
+    bool _979 = true;
+    int distributeCoins(TreeNode* root) {
+        int res = 0;
+        dfs_979(root, res);
+        return res;
+    }
+
+    int dfs_979(TreeNode* root, int &res) {
+        if(root == NULL)   
+            return 0;
+        int lv = dfs_979(root->left, res);
+        int rv = dfs_979(root->right, res);
+        res += abs(lv) + abs(rv);
+        return root->val -1 + lv + rv;
+    }
+
+
     /**
     1235. Maximum Profit in Job Scheduling
     We have n jobs, where every job is scheduled to be done from startTime[i] to endTime[i], obtaining a profit of profit[i].
@@ -5193,6 +5447,77 @@ public:
         res += word2.substr(n1);
         return res;
     }
+    /*
+    2385. Amount of Time for Binary Tree to Be Infected
+    You are given the root of a binary tree with unique values, and an integer start. At minute 0, an infection starts from the node with value start.
+
+    Each minute, a node becomes infected if:
+
+    The node is currently uninfected.
+    The node is adjacent to an infected node.
+    Return the number of minutes needed for the entire tree to be infected.
+
+    
+
+    Example 1:
+
+
+    Input: root = [1,5,3,null,4,10,6,9,2], start = 3
+    Output: 4
+    Explanation: The following nodes are infected during:
+    - Minute 0: Node 3
+    - Minute 1: Nodes 1, 10 and 6
+    - Minute 2: Node 5
+    - Minute 3: Node 4
+    - Minute 4: Nodes 9 and 2
+    It takes 4 minutes for the whole tree to be infected so we return 4.
+    Example 2:
+
+
+    Input: root = [1], start = 1
+    Output: 0
+    Explanation: At minute 0, the only node in the tree is infected so we return 0.
+    
+
+    Constraints:
+
+    The number of nodes in the tree is in the range [1, 105].
+    1 <= Node.val <= 105
+    Each node has a unique value.
+    A node with a value of start exists in the tree.
+    */
+    bool _2385 = false;
+    int amountOfTime(TreeNode* root, int start) {
+        bool isin = false;
+        int hei = 0;
+        if (root->val == start)
+            return dfs_2385(root, start, isin, hei);
+        isin = false;
+        hei = 0;
+        int lh = dfs_2385(root->left, start, isin, hei);
+        cout << lh << " " << isin << " " << hei << endl;
+        bool isin_2 = false;
+        int hei_2 = 0;
+        int rh = dfs_2385(root->right, start, isin_2, hei_2);
+        cout << rh << " " << isin_2 << " " << hei_2 << endl;
+
+        if(isin)
+            return max(hei, rh + lh + 2 - hei);
+        return max(hei_2, rh + lh + 2 - hei_2);
+        
+    }
+
+    int dfs_2385(TreeNode* root, int start, bool &isin, int &hei) {
+        if(root == NULL)    return -1;
+        int height = max(dfs_2385(root->left, start, isin, hei),dfs_2385(root->right, start, isin, hei)) + 1;
+        if(root->val == start)  {
+            isin = true;
+            hei = height;
+        }
+        return height;
+
+    }
+
 };
 
 /**
