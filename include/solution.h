@@ -2064,6 +2064,25 @@ public:
             return 0;
         return max(maxDepth(root->left), maxDepth(root->right)) + 1;
     }
+    /**/
+    bool _105 = true;
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        return buildTree(preorder, inorder, 0, 0, inorder.size());
+    }
+
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder,int lpre,int lin, int len) {
+        //cout << lpre << " " << lin << " " << len << endl;
+        if (len == 0)
+            return NULL;
+        int v = preorder[lpre];
+        // pos = find(inorder.begin() + lin, inorder.begin() + lin + len, v);
+        int pos = lin;
+        while(inorder[pos]!= v) pos++;
+        TreeNode* root = new TreeNode(v);
+        root->left = buildTree(preorder, inorder, lpre + 1, lin, pos - lin);
+        root->right = buildTree(preorder, inorder, lpre + pos - lin + 1, pos + 1, len - pos + lin - 1);
+        return root;
+    }
     /**
     113. Path Sum II
     Given a binary tree and a sum, find all root-to-leaf paths where each path's sum equals the given sum.
@@ -5123,6 +5142,12 @@ public:
         int res = 0;
         dfs_979(root, res);
         return res;
+        
+    }
+    
+    void xxx(){
+        vector<int> a;
+        find(a.begin(), a.end(), 1);
     }
 
     int dfs_979(TreeNode* root, int &res) {
