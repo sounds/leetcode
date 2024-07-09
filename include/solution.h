@@ -1882,6 +1882,55 @@ public:
         }
         return j;
     }
+    /*
+    82. Remove Duplicates from Sorted List II
+    Given the head of a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list. Return the linked list sorted as well.
+
+    Example 1:
+
+    Input: head = [1,2,3,3,4,4,5]
+    Output: [1,2,5]
+    Example 2:
+
+    Input: head = [1,1,1,2,3]
+    Output: [2,3]
+    
+    Constraints:
+
+    The number of nodes in the list is in the range [0, 300].
+    -100 <= Node.val <= 100
+    The list is guaranteed to be sorted in ascending order.
+    */
+    bool _82 = true;
+    ListNode* deleteDuplicates(ListNode* head) {
+        if (head == NULL)
+            return head;
+        ListNode* res = head, *p = head, *last = NULL;
+        int num = 0;
+        while(p != NULL) {
+            if (p->next != NULL && p->val == p->next->val) {
+                num++;
+                p = p->next;
+            }
+            else {
+                if(num > 0) {
+                    if(last != NULL)
+                        last->next = p->next;
+                    else
+                        res = p->next;
+                    p = p->next;
+                    num = 0;
+                }
+                else {
+                    last = p;
+                    p = p->next;
+
+                }
+                
+            }
+        }
+        return res;
+    }
     /**
     88. Merge Sorted Array
     Given two sorted integer arrays nums1 and nums2, merge nums2 into nums1 as one sorted array.
