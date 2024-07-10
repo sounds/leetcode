@@ -1165,6 +1165,88 @@ public:
         return x;
     }
 
+    vector<int> searchRange(vector<int>& nums, int target) {
+        vector<int> res;
+        cout << nums.size() << endl;
+        if(nums.size() == 0) {
+            res.push_back(-1);
+            res.push_back(-1);
+            return res;
+        }
+        int n1 = search_1st_less(nums,target,0,nums.size() - 1);
+        int n2 = search_1st_more(nums,target,0,nums.size() - 1);
+
+       
+        if(n1 + 1 < nums.size() && nums[n1 + 1] == target)  res.push_back(n1 + 1);
+        else res.push_back(-1);
+
+        if(n2 - 1 >= 0 && nums[n2 - 1] == target)  res.push_back(n2 - 1);
+        else res.push_back(-1);
+        return res;
+    }
+
+
+    int search_1st_less(vector<int>& nums, int target, int i, int j) {
+        if (j > j)
+            return -1;
+        if(nums[j] < target && j + 1 < nums.size() && nums[j+1] >= target)
+            return j;
+        int mid = (i + j) / 2 + (i + j) % 2;
+        
+        if(nums[mid] >= target) {
+            return search_1st_less(nums, target, i, mid - 1);
+        } else {
+            return search_1st_less(nums, target, mid, j);
+        }
+
+    }
+    int search_1st_more(vector<int>& nums, int target, int i, int j) {
+        if (i > j)
+            return nums.size();
+        if(nums[j] > target && j - 1 >= 0 && nums[j-1] <= target)
+            return j;
+        int mid = (i + j) / 2;
+        if(nums[mid] <= target) {
+            return search_1st_more(nums, target, mid + 1, j);
+        } else {
+            return search_1st_more(nums, target, i, mid);
+        }
+
+    }
+
+    // int search_1st_less(vector<int>& nums, int target, int i, int j) {
+    //     cout << i << " less " << j <<  endl;
+    //     if(i > j)
+    //         return -1;
+    //     if(i == j && nums[i] < target)
+    //         return i;
+    //     int mid = (i + j) / 2;
+        
+    //     if(nums[mid] >= target) {
+    //         return search_1st_less(nums, target, i, mid - 1);
+    //     } else {
+    //         if(mid + 1 <= j && nums[mid + 1] >= target && mid + 1 == j)
+    //             return mid;
+    //         return search_1st_less(nums, target, mid, j);
+    //     }
+
+    // }
+    // int search_1st_more(vector<int>& nums, int target, int i, int j) {
+    //     cout << i << " more " << j << endl;
+    //     if(i > j)
+    //         return nums.size();
+    //     if(i == j && nums[i] > target)
+    //         return i;
+    //     int mid = (i + j) / 2;
+    //     if(nums[mid] <= target) {
+    //         return search_1st_more(nums, target, mid + 1, j);
+    //     } else {
+    //         if(mid - 1 >= i && nums[mid - 1] <= target && mid - 1 == i)
+    //             return mid;
+    //         return search_1st_more(nums, target, i, mid);
+    //     }
+
+    // }
     /*
     int search(vector<int>& nums, int target) {
 
@@ -4084,6 +4166,58 @@ public:
     }
     */
     
+    /**/
+    bool _442 = true;
+    vector<int> findDuplicates(vector<int>& nums) {
+        const int m = 1e6;
+        vector<int> res;
+        for(int i = 0; i < nums.size(); ++i) {
+            nums[nums[i] % m - 1] += m;
+        }
+        for(int i = 0; i < nums.size(); ++i) {
+            if(nums[i] / m / 2 == 1)
+                res.push_back(i + 1);
+        }
+        return res;
+    }
+    /*
+    525. Contiguous Array
+    Given a binary array nums, return the maximum length of a contiguous subarray with an equal number of 0 and 1.
+
+    Example 1:
+    Input: nums = [0,1]
+    Output: 2
+    Explanation: [0, 1] is the longest contiguous subarray with an equal number of 0 and 1.
+    Example 2:
+
+    Input: nums = [0,1,0]
+    Output: 2
+    Explanation: [0, 1] (or [1, 0]) is a longest contiguous subarray with equal number of 0 and 1.
+    
+    Constraints:
+
+    1 <= nums.length <= 105
+    nums[i] is either 0 or 1.
+    */
+    bool _525 = true;
+    int findMaxLength(vector<int>& nums) {
+        int sum0 = 0, sum1 = 0, ans = 0;
+        unordered_map<int, int> m;
+        m[0] = -1;
+        for(int i = 0 ;i < nums.size(); ++i) {
+            if(nums[i] == 0) sum0++;
+            else sum1++;
+            auto diff = sum0 - sum1;
+            if(m.find(diff) != m.end()) {
+                ans = max(ans, i - m[diff]);
+            }else {
+                m[diff] = i;
+            }
+        }
+        return ans;
+    }
+
+
     bool _543 = true;
     int diameterOfBinaryTree(TreeNode* root) {
         int res = 0;
