@@ -1164,89 +1164,80 @@ public:
         x = binarySearch_33(nums, mid, nums.size() - 1, target);
         return x;
     }
+    /*
+    34. Find First and Last Position of Element in Sorted Array
+    Given an array of integers nums sorted in non-decreasing order, find the starting and ending position of a given target value.
 
+    If target is not found in the array, return [-1, -1].
+
+    You must write an algorithm with O(log n) runtime complexity.
+
+    Example 1:
+
+    Input: nums = [5,7,7,8,8,10], target = 8
+    Output: [3,4]
+    Example 2:
+
+    Input: nums = [5,7,7,8,8,10], target = 6
+    Output: [-1,-1]
+    Example 3:
+
+    Input: nums = [], target = 0
+    Output: [-1,-1]
+    
+    Constraints:
+
+    0 <= nums.length <= 105
+    -109 <= nums[i] <= 109
+    nums is a non-decreasing array.
+    -109 <= target <= 109
+    */
+    bool _34 = true;
     vector<int> searchRange(vector<int>& nums, int target) {
         vector<int> res;
-        cout << nums.size() << endl;
-        if(nums.size() == 0) {
-            res.push_back(-1);
-            res.push_back(-1);
-            return res;
-        }
-        int n1 = search_1st_less(nums,target,0,nums.size() - 1);
-        int n2 = search_1st_more(nums,target,0,nums.size() - 1);
+        int n1 = search_left(nums,target,0,nums.size() - 1);
+        int n2 = search_right(nums,target,0,nums.size() - 1);
 
-       
-        if(n1 + 1 < nums.size() && nums[n1 + 1] == target)  res.push_back(n1 + 1);
-        else res.push_back(-1);
-
-        if(n2 - 1 >= 0 && nums[n2 - 1] == target)  res.push_back(n2 - 1);
-        else res.push_back(-1);
+        res.push_back(n1);
+        res.push_back(n2);
         return res;
     }
 
-
-    int search_1st_less(vector<int>& nums, int target, int i, int j) {
-        if (j > j)
+    int search_left(vector<int>& nums, int target, int i, int j) {
+        if(i > j)
             return -1;
-        if(nums[j] < target && j + 1 < nums.size() && nums[j+1] >= target)
-            return j;
-        int mid = (i + j) / 2 + (i + j) % 2;
-        
-        if(nums[mid] >= target) {
-            return search_1st_less(nums, target, i, mid - 1);
-        } else {
-            return search_1st_less(nums, target, mid, j);
-        }
-
-    }
-    int search_1st_more(vector<int>& nums, int target, int i, int j) {
-        if (i > j)
-            return nums.size();
-        if(nums[j] > target && j - 1 >= 0 && nums[j-1] <= target)
-            return j;
         int mid = (i + j) / 2;
-        if(nums[mid] <= target) {
-            return search_1st_more(nums, target, mid + 1, j);
+
+        if(nums[mid] > target) {
+            return search_left(nums, target, i, mid - 1);
+        } else if (nums[mid] < target) {
+            return search_left(nums, target, mid + 1, j);
         } else {
-            return search_1st_more(nums, target, i, mid);
+            if(mid - 1 >= 0 && nums[mid - 1] < target || mid == 0)
+                return mid;
+            else 
+                return search_left(nums, target, i, mid - 1);
         }
 
     }
 
-    // int search_1st_less(vector<int>& nums, int target, int i, int j) {
-    //     cout << i << " less " << j <<  endl;
-    //     if(i > j)
-    //         return -1;
-    //     if(i == j && nums[i] < target)
-    //         return i;
-    //     int mid = (i + j) / 2;
-        
-    //     if(nums[mid] >= target) {
-    //         return search_1st_less(nums, target, i, mid - 1);
-    //     } else {
-    //         if(mid + 1 <= j && nums[mid + 1] >= target && mid + 1 == j)
-    //             return mid;
-    //         return search_1st_less(nums, target, mid, j);
-    //     }
+    int search_right(vector<int>& nums, int target, int i, int j) {
+        if(i > j)
+            return -1;
+        int mid = (i + j) / 2;
 
-    // }
-    // int search_1st_more(vector<int>& nums, int target, int i, int j) {
-    //     cout << i << " more " << j << endl;
-    //     if(i > j)
-    //         return nums.size();
-    //     if(i == j && nums[i] > target)
-    //         return i;
-    //     int mid = (i + j) / 2;
-    //     if(nums[mid] <= target) {
-    //         return search_1st_more(nums, target, mid + 1, j);
-    //     } else {
-    //         if(mid - 1 >= i && nums[mid - 1] <= target && mid - 1 == i)
-    //             return mid;
-    //         return search_1st_more(nums, target, i, mid);
-    //     }
+        if(nums[mid] > target) {
+            return search_right(nums, target, i, mid - 1);
+        } else if (nums[mid] < target) {
+            return search_right(nums, target, mid + 1, j);
+        } else {
+            if(mid + 1 < nums.size() && nums[mid + 1] > target || mid + 1 == nums.size())
+                return mid;
+            else 
+                return search_right(nums, target, mid + 1, j);
+        }
 
-    // }
+    }
     /*
     int search(vector<int>& nums, int target) {
 
@@ -2813,7 +2804,32 @@ public:
         }
         return nums[k];
     }
-
+    /**/
+    bool _179 = true;
+    static bool compare_179(string &s1, string &s2) {
+        return s1+s2 > s2+s1;
+    }
+    string largestNumber(vector<int>& nums) {
+        vector<string> vec;
+        for(int num: nums) {
+            string s = to_string(num);
+            vec.push_back(s);
+        }
+        sort(vec.begin(),vec.end(), compare_179);
+        string ans = "";
+        for(auto s: vec) {
+            ans += s;
+        }
+        bool all_zero = true;
+        for(int i = 0; i < ans.length(); i++) {
+            if(ans[i] != '0') {
+                all_zero =  false;
+            }
+        }
+        if (all_zero)
+            return "0";
+        return ans;
+    }
     /**
     189. Rotate Array
     Given an integer array nums, rotate the array to the right by k steps, where k is non-negative.
@@ -5341,7 +5357,104 @@ public:
         res += abs(lv) + abs(rv);
         return root->val -1 + lv + rv;
     }
+    bool _1262 = true;
+    // int maxSumDivThree(vector<int>& nums) {
+    //     vector<int> dp(3,0);
+    //     for(auto num: nums) {
+    //         vector<int> dp_2 = dp;
+    //         for(auto last: dp_2) {
+    //             dp[(last + num) % 3] = max(dp[(last + num) % 3], last + num);
+    //             // cout << dp[0] << " " << dp[1] << " " << dp[2] << endl;
+    //         }
+    //     }
+    //     return dp[0];
+    // }
+    int maxSumDivThree(vector<int>& nums) { 
+        sort(nums.begin(), nums.end(), greater<int>());
+        int ans = 0;
+        vector<vector<int> > arr(2,vector<int>());
+        for(auto x: nums) {
+            int m = x % 3;
+            ans += x;
+            if (m == 1) {
+                arr[0].push_back(x);
+            }else if(m == 2){
+                arr[1].push_back(x);
+            }
+        }
+        if(arr[0].size() < arr[1].size())
+            swap(arr[0], arr[1]);
 
+        int n1 = arr[0].size();
+        int n2 = arr[1].size();
+        cout << "ans:" << ans << " " << n1 << " " << n2 << endl;
+        if((n1 - n2) % 3 == 0)
+            return ans;
+        else if (max(n1, n2) < 3) {
+            for(int i = 0; i < (n1 - n2) % 3; ++i)
+                ans -= arr[0][arr[0].size() - 1 - i];
+        } else if ((n1 - n2) % 3 > 0) {
+            int x1 = 0;
+            for(int i = 0; i < (n1 - n2) % 3; ++i)
+                x1 += arr[0][arr[0].size() - 1 - i];
+            int x2 = 0;
+            if(n2 < 3 - (n1 - n2) % 3)
+                x2 = x1 + 1;
+            else
+                for(int i = 0; i < 3 - (n1 - n2) % 3; ++i)
+                    x2 += arr[1][arr[1].size() - 1 - i];
+            cout << "x1:" << x1 << " x2:" << x2 << endl;
+            ans -= min(x1,x2);
+        }
+        return ans;
+    }
+    // int maxSumDivThree_old(vector<int>& nums) {
+    //     sort(nums.begin(), nums.end(), greater<int>());
+    //     int ans = 0;
+    //     vector<vector<int> > arr(2,vector<int>());
+    //     for(auto x: nums) {
+    //         int m = x % 3;
+    //         if(m == 0)
+    //             ans += x;
+    //         else if (m == 1) {
+    //             arr[0].push_back(x);
+    //         }else {
+    //             arr[1].push_back(x);
+    //         }
+    //     }
+    //     int i = 0, j = 0;
+        
+    //     while(i < arr[0].size() || j < arr[1].size()) {
+            
+    //         vector<int> tmp(3,0);
+    //         if(i + 2 < arr[0].size())
+    //             tmp[0] = arr[0][i] + arr[0][i + 1] + arr[0][i + 2];
+    //         if(j + 2 < arr[1].size())
+    //             tmp[1] = arr[1][j] + arr[1][j + 1] + arr[1][j + 2];
+    //         if(i < arr[0].size() && j < arr[1].size())
+    //             tmp[2] = arr[0][i] + arr[1][j];
+            
+    //         int max_id = -1, max_sum = 0;
+    //         for(auto k = 0; k < tmp.size(); ++k) {
+    //             if(tmp[k] > max_sum) {
+    //                 max_sum = tmp[k];
+    //                 max_id = k;
+    //             }
+    //         }
+    //         if(max_sum == 0)
+    //             break;
+
+    //         ans += max_sum;
+    //         switch(max_id) {
+    //             case 0: i += 3; break;
+    //             case 1: j += 3; break;
+    //             case 2: ++i;++j;break;
+    //         }
+    //     }
+        
+    //     return ans;
+
+    // }
 
     /**
     1235. Maximum Profit in Job Scheduling
