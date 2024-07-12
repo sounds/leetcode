@@ -1795,6 +1795,65 @@ public:
             res[i] = res[i - 1] + res[i - 2];
         return res[n];
     }
+    /*
+    72. Edit Distance
+    Given two strings word1 and word2, return the minimum number of operations required to convert word1 to word2.
+
+    You have the following three operations permitted on a word:
+
+    Insert a character
+    Delete a character
+    Replace a character
+    
+    Example 1:
+
+    Input: word1 = "horse", word2 = "ros"
+    Output: 3
+    Explanation: 
+    horse -> rorse (replace 'h' with 'r')
+    rorse -> rose (remove 'r')
+    rose -> ros (remove 'e')
+    Example 2:
+
+    Input: word1 = "intention", word2 = "execution"
+    Output: 5
+    Explanation: 
+    intention -> inention (remove 't')
+    inention -> enention (replace 'i' with 'e')
+    enention -> exention (replace 'n' with 'x')
+    exention -> exection (replace 'n' with 'c')
+    exection -> execution (insert 'u')
+    
+
+    Constraints:
+
+    0 <= word1.length, word2.length <= 500
+    word1 and word2 consist of lowercase English letters.
+    */
+    bool _72 = true;
+    int minDistance(string word1, string word2) {
+
+        vector<vector<int> > dp(word1.size() + 1, vector<int>(word2.size() + 1, 0));
+        for(int i = 0; i <= word2.size(); ++i)
+            dp[0][i] = i;
+        for(int i = 0; i <= word1.size(); ++i)
+            dp[i][0] = i;
+
+        for(int i = 1; i <= word1.size(); ++i) {
+            for(int j = 1; j <= word2.size(); ++j) {
+                if(word1[i - 1] == word2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = min(dp[i - 1][j - 1], min(dp[i][j - 1], dp[i - 1][j])) + 1;
+                }
+                // cout << dp[i][j] << " ";
+            }
+            // cout << endl;
+        }
+        return dp[word1.size()][word2.size()];
+    }
+
+
     /**
     74. Search a 2D Matrix
     Write an efficient algorithm that searches for a value in an m x n matrix.
@@ -2037,6 +2096,68 @@ public:
             }
         }
         return;
+    }
+    /*
+    93. Restore IP Addresses
+    A valid IP address consists of exactly four integers separated by single dots. Each integer is between 0 and 255 (inclusive) and cannot have leading zeros.
+
+    For example, "0.1.2.201" and "192.168.1.1" are valid IP addresses, but "0.011.255.245", "192.168.1.312" and "192.168@1.1" are invalid IP addresses.
+    Given a string s containing only digits, return all possible valid IP addresses that can be formed by inserting dots into s. You are not allowed to reorder or remove any digits in s. You may return the valid IP addresses in any order.
+
+    Example 1:
+
+    Input: s = "25525511135"
+    Output: ["255.255.11.135","255.255.111.35"]
+    Example 2:
+
+    Input: s = "0000"
+    Output: ["0.0.0.0"]
+    Example 3:
+
+    Input: s = "101023"
+    Output: ["1.0.10.23","1.0.102.3","10.1.0.23","10.10.2.3","101.0.2.3"]
+    
+
+    Constraints:
+
+    1 <= s.length <= 20
+    s consists of digits only.
+    */
+    bool _93 = true;
+    vector<string> restoreIpAddresses(string s) {
+        vector<string> res;
+        int len = s.length();
+        if(len < 4)
+            return res;
+        for(int i = 1; i < len - 2; ++i) {
+            if(!check_93(s,0,i))
+                continue;
+            for(int j = i + 1; j < len - 1; ++j) {
+                if(!check_93(s,i,j))
+                    continue;
+                for(int k = j + 1; k < len; ++k) {
+                    if(check_93(s,j,k) && check_93(s,k,len)
+                    ) {
+                        string ss = s;
+                        ss.insert(i, ".");
+                        ss.insert(j + 1, ".");
+                        ss.insert(k + 2, ".");
+                        res.push_back(ss);
+
+                    }
+                }
+            }        
+        }
+        return res;
+    }
+    bool check_93(string &s, int i, int j) {
+        if(j - i > 1 && s[i] == '0')
+            return false;
+        int val = atoi(s.substr(i, j - i).c_str());
+        // cout << val << endl;
+        if(val >=0 && val <= 255)
+            return true;
+        return false;
     }
 
     /**
@@ -4182,7 +4303,32 @@ public:
     }
     */
     
-    /**/
+    /*
+    442. Find All Duplicates in an Array
+    Given an integer array nums of length n where all the integers of nums are in the range [1, n] and each integer appears once or twice, return an array of all the integers that appears twice.
+
+    You must write an algorithm that runs in O(n) time and uses only constant extra space.
+    Example 1:
+
+    Input: nums = [4,3,2,7,8,2,3,1]
+    Output: [2,3]
+    Example 2:
+
+    Input: nums = [1,1,2]
+    Output: [1]
+    Example 3:
+
+    Input: nums = [1]
+    Output: []
+    
+
+    Constraints:
+
+    n == nums.length
+    1 <= n <= 105
+    1 <= nums[i] <= n
+    Each element in nums appears once or twice.
+    */
     bool _442 = true;
     vector<int> findDuplicates(vector<int>& nums) {
         const int m = 1e6;
@@ -4195,6 +4341,19 @@ public:
                 res.push_back(i + 1);
         }
         return res;
+    }
+    bool _470 = true;
+    int rand7() {
+        return 0;
+    }
+    int rand10() {
+        while(true) {
+            int i = rand7();
+            int j = rand7();
+            int res = (j - 1) * 7 + i;
+            if(res <= 40)
+                return 1 + res % 10;
+        }
     }
     /*
     525. Contiguous Array
@@ -5348,7 +5507,7 @@ public:
         vector<int> a;
         find(a.begin(), a.end(), 1);
     }
-
+    
     int dfs_979(TreeNode* root, int &res) {
         if(root == NULL)   
             return 0;
@@ -5357,6 +5516,53 @@ public:
         res += abs(lv) + abs(rv);
         return root->val -1 + lv + rv;
     }
+    /*
+    1143. Longest Common Subsequence
+    Given two strings text1 and text2, return the length of their longest common subsequence. If there is no common subsequence, return 0.
+
+    A subsequence of a string is a new string generated from the original string with some characters (can be none) deleted without changing the relative order of the remaining characters.
+
+    For example, "ace" is a subsequence of "abcde".
+    A common subsequence of two strings is a subsequence that is common to both strings.
+
+    Example 1:
+    Input: text1 = "abcde", text2 = "ace" 
+    Output: 3  
+    Explanation: The longest common subsequence is "ace" and its length is 3.
+    Example 2:
+
+    Input: text1 = "abc", text2 = "abc"
+    Output: 3
+    Explanation: The longest common subsequence is "abc" and its length is 3.
+    Example 3:
+
+    Input: text1 = "abc", text2 = "def"
+    Output: 0
+    Explanation: There is no such common subsequence, so the result is 0.
+    
+
+    Constraints:
+
+    1 <= text1.length, text2.length <= 1000
+    text1 and text2 consist of only lowercase English characters.
+    
+    */
+    bool _1143 = true;
+    int longestCommonSubsequence(string text1, string text2) {
+        vector<vector<int> > dp(text1.size() + 1, vector<int>(text2.size() + 1, 0));
+        for(int i = 1; i < text1.size() + 1; ++i) {
+            for(int j = 1; j < text2.size() + 1; ++j) {
+                if(text1[i - 1] == text2[j - 1])
+                    dp[i][j] = max(dp[i - 1][j - 1]+1, max(dp[i-1][j],dp[i][j-1]));
+                else
+                    dp[i][j] = max(dp[i - 1][j - 1], max(dp[i-1][j],dp[i][j-1]));
+                // cout << dp[i][j] << " ";
+            }
+            // cout << endl;
+        }
+        return dp[text1.size()][text2.size()];
+    }
+
     bool _1262 = true;
     // int maxSumDivThree(vector<int>& nums) {
     //     vector<int> dp(3,0);
