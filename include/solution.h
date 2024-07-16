@@ -2850,6 +2850,93 @@ public:
         }
         return nums[a];
     }
+    /*
+    165. Compare Version Numbers
+    Hint
+    Given two version strings, version1 and version2, compare them. A version string consists of revisions separated by dots '.'. The value of the revision is its integer conversion ignoring leading zeros.
+
+    To compare version strings, compare their revision values in left-to-right order. If one of the version strings has fewer revisions, treat the missing revision values as 0.
+
+    Return the following:
+
+    If version1 < version2, return -1.
+    If version1 > version2, return 1.
+    Otherwise, return 0.
+    
+
+    Example 1:
+    Input: version1 = "1.2", version2 = "1.10"
+    Output: -1
+
+    Explanation:
+    version1's second revision is "2" and version2's second revision is "10": 2 < 10, so version1 < version2.
+
+    Example 2:
+    Input: version1 = "1.01", version2 = "1.001"
+    Output: 0
+
+    Explanation:
+    Ignoring leading zeroes, both "01" and "001" represent the same integer "1".
+    Example 3:
+
+    Input: version1 = "1.0", version2 = "1.0.0.0"
+    Output: 0
+    Explanation:
+
+    version1 has less revisions, which means every missing revision are treated as "0".
+
+    Constraints:
+
+    1 <= version1.length, version2.length <= 500
+    version1 and version2 only contain digits and '.'.
+    version1 and version2 are valid version numbers.
+    All the given revisions in version1 and version2 can be stored in a 32-bit integer.
+    */
+    bool _165 = true;
+    int compareVersion(string version1, string version2) {
+        vector<int> v1, v2;
+        int start = 0;
+        for(int i = 0; i < version1.length(); ++i) {
+            if(version1[i] == '.') {
+                v1.push_back(atoi(version1.substr(start, i - start).c_str()));
+                start = i + 1;
+                // cout << v1.back() << endl;
+            }
+        }
+        if(start < version1.length())
+            v1.push_back(atoi(version1.substr(start).c_str()));
+
+        start = 0;
+        for(int i = 0; i < version2.length(); ++i) {
+            if(version2[i] == '.') {
+                v2.push_back(atoi(version2.substr(start, i - start).c_str()));
+                start = i + 1;
+                // cout << v2.back() << endl;
+            }
+        }
+        if(start < version2.length())
+            v2.push_back(atoi(version2.substr(start).c_str()));
+
+        // cout << v1.size() << " " << v2.size() << endl;
+        int n  = v1.size() - v2.size();
+        if(n > 0) {
+            for(int i = 0;i < n; ++i)
+                v2.push_back(0);
+        } else {
+            for(int i = 0;i < -n; ++i)
+                v1.push_back(0);
+        }
+        // cout << v1.size() << " " << v2.size() << endl;
+        // return 0 ;
+        for(int i = 0; i < v1.size(); i++) {
+            if(v1[i] > v2[i])
+                return 1;
+            else if (v1[i] < v2[i])
+                return -1; 
+        }
+        return 0;
+        
+    }
 
     /**
     167. Two Sum II - Input array is sorted
@@ -4355,6 +4442,54 @@ public:
                 return 1 + res % 10;
         }
     }
+    /*
+    494. Target Sum
+    You are given an integer array nums and an integer target.
+
+    You want to build an expression out of nums by adding one of the symbols '+' and '-' before each integer in nums and then concatenate all the integers.
+
+    For example, if nums = [2, 1], you can add a '+' before 2 and a '-' before 1 and concatenate them to build the expression "+2-1".
+    Return the number of different expressions that you can build, which evaluates to target.
+
+    Example 1:
+
+    Input: nums = [1,1,1,1,1], target = 3
+    Output: 5
+    Explanation: There are 5 ways to assign symbols to make the sum of nums be target 3.
+    -1 + 1 + 1 + 1 + 1 = 3
+    +1 - 1 + 1 + 1 + 1 = 3
+    +1 + 1 - 1 + 1 + 1 = 3
+    +1 + 1 + 1 - 1 + 1 = 3
+    +1 + 1 + 1 + 1 - 1 = 3
+    Example 2:
+
+    Input: nums = [1], target = 1
+    Output: 1
+    
+    Constraints:
+
+    1 <= nums.length <= 20
+    0 <= nums[i] <= 1000
+    0 <= sum(nums[i]) <= 1000
+    -1000 <= target <= 1000
+    */
+    bool _494 = true;
+    int findTargetSumWays(vector<int>& nums, int target) {
+        int res = 0;
+        dfs_494(nums,target,0,0,res);
+        return res;
+    }
+
+    void  dfs_494(vector<int> &sums, int target, int i, int sum, int &res) {
+        if(i == sums.size()) {
+            if(sum == target)
+                res++;
+            return;
+        }
+        dfs_494(sums, target, i + 1, sum + sums[i], res);
+        dfs_494(sums, target, i + 1, sum - sums[i], res);
+    }
+
     /*
     525. Contiguous Array
     Given a binary array nums, return the maximum length of a contiguous subarray with an equal number of 0 and 1.
