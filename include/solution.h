@@ -1068,6 +1068,27 @@ public:
         }
         return j;
     }
+    /**/
+    bool _27 = true;
+    int removeElement(vector<int>& nums, int val) {
+        int pos = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(nums[i] != val)
+                nums[pos++] = nums[i];
+        }
+        return pos;
+    }
+    // int removeElement(vector<int>& nums, int val) {
+    //     int j = nums.size() - 1, i = 0;
+    //     while(i <= j) {
+    //         // cout << i << " " << j << endl;
+    //         if(nums[j] == val)  j--;
+    //         else if(nums[i] != val) i++;
+    //         else
+    //             swap(nums[j], nums[i]);
+    //     }
+    //     return i;
+    // }
 
     /**
     31. Next Permutation
@@ -1710,7 +1731,44 @@ public:
         }
         return ans;
     }
+    /*
+    59. Spiral Matrix II
+    Given a positive integer n, generate an n x n matrix filled with elements from 1 to n2 in spiral order.
 
+    Example 1:
+    Input: n = 3
+    Output: [[1,2,3],[8,9,4],[7,6,5]]
+
+    Example 2:
+    Input: n = 1
+    Output: [[1]]
+    
+    Constraints:
+
+    1 <= n <= 20
+    */
+    bool _59 = true;
+    vector<vector<int>> generateMatrix(int n) {
+        vector<vector<int>> vec(n, vector<int>(n, 0));
+        int i = 0, j = 0;
+        vec[0][0] = 1;
+        for(int v = 2; v <= n * n;) {
+            // cout << v << endl;
+            while(j + 1 < vec[i].size() && vec[i][j + 1] == 0) {
+                vec[i][++j] = v++;
+            }
+            while(i + 1 < vec.size() && vec[i + 1][j] == 0) {
+                vec[++i][j] = v++;
+            }
+            while(j - 1 >= 0 && vec[i][j - 1] == 0) {
+                vec[i][--j] = v++;
+            }
+            while(i - 1 >= 0 && vec[i - 1][j] == 0) {
+                vec[--i][j] = v++;
+            }
+        }
+        return vec;
+    }
     /**
     67. Add Binary
     Given two binary strings, return their sum (also a binary string).
@@ -2673,6 +2731,57 @@ public:
         if (ans.empty())
             return 0;
         return min_element(ans.begin(), ans.end())[0];
+    }
+    /*
+    128. Longest Consecutive Sequence
+    Given an unsorted array of integers nums, return the length of the longest consecutive elements sequence.
+
+    You must write an algorithm that runs in O(n) time.
+
+    Example 1:
+
+    Input: nums = [100,4,200,1,3,2]
+    Output: 4
+    Explanation: The longest consecutive elements sequence is [1, 2, 3, 4]. Therefore its length is 4.
+    Example 2:
+
+    Input: nums = [0,3,7,2,5,8,4,6,0,1]
+    Output: 9
+    
+
+    Constraints:
+
+    0 <= nums.length <= 105
+    -109 <= nums[i] <= 109
+    */
+    bool _128 = true;
+    int longestConsecutive(vector<int>& nums) {
+        int res = 0;
+        unordered_map<int, int> m;
+        for(int i = 0; i < nums.size(); ++i)
+            m[nums[i]] = 1;
+        for(int i = 0; i < nums.size(); ++i) {
+            if(m[nums[i]] > 1)
+                continue;
+            int j = 1;
+            for(; m.find(nums[i] - j) != m.end(); ++j){
+                if(m[nums[i] - j] != 1) {
+                    m[nums[i]] += m[nums[i] - j];  
+                    break;
+                }
+                else
+                    m[nums[i]]++;
+                
+            }
+            for(int k = 1; k < j; ++k) {
+                m[nums[i] - k] = m[nums[i]] - k;
+            }
+            
+            // cout << m[nums[i]] << endl;
+            res = max(res, m[nums[i]]);
+                
+        }
+        return res;
     }
 
     /*
@@ -4184,7 +4293,30 @@ public:
         }
         return dp[amount];
     }
-
+    /**/
+    bool _343 = true;
+    int integerBreak(int n) {
+        int res = 1;
+        for(int i = 2;i <= n / 2 + 1; ++i) {
+            
+            vector<int> vec;
+            int x = n / i;
+            // cout << i << " " << x << endl;
+            for(int j = 0; j < i; ++j) {
+                vec.push_back(x);
+            }
+            for(int j = 0; j < n % i; ++j) {
+                vec[j] += 1;
+            }
+            int tmp = 1;
+            for(auto j: vec) {
+                // cout << j  << " ";
+                tmp *= j;
+            }
+            res = max(res, tmp);
+        }
+        return res;
+    }
     /**
     344. Reverse String
     Write a function that reverses a string. The input string is given as an array of characters char[].
@@ -4971,6 +5103,45 @@ public:
         return true;
     }
     /*
+    704. Binary Search
+    Given an array of integers nums which is sorted in ascending order, and an integer target, write a function to search target in nums. If target exists, then return its index. Otherwise, return -1.
+
+    You must write an algorithm with O(log n) runtime complexity.
+    Example 1:
+
+    Input: nums = [-1,0,3,5,9,12], target = 9
+    Output: 4
+    Explanation: 9 exists in nums and its index is 4
+    Example 2:
+
+    Input: nums = [-1,0,3,5,9,12], target = 2
+    Output: -1
+    Explanation: 2 does not exist in nums so return -1
+    
+
+    Constraints:
+
+    1 <= nums.length <= 104
+    -104 < nums[i], target < 104
+    All the integers in nums are unique.
+    nums is sorted in ascending order.
+    */
+    bool _704 = true;
+    int search(vector<int>& nums, int target) {
+        int left = 0, right = nums.size() - 1;
+        while(left <= right) {
+            int mid = (left + right) / 2;
+            if(nums[mid] == target)
+                return mid;
+            else if(nums[mid] < target)
+                left = mid + 1;
+            else
+                right = mid - 1;
+        }
+        return -1;
+    }
+
+    /*
     767. Reorganize String
     Given a string s, rearrange the characters of s so that any two adjacent characters are not the same.
 
@@ -5229,7 +5400,49 @@ public:
         }
         return ans;
     }
+    /*
+    852. Peak Index in a Mountain Array
+    You are given an integer mountain array arr of length n where the values increase to a peak element and then decrease.
 
+    Return the index of the peak element.
+
+    Your task is to solve it in O(log(n)) time complexity.
+
+    Example 1:
+    Input: arr = [0,1,0]
+    Output: 1
+
+    Example 2:
+    Input: arr = [0,2,1,0]
+    Output: 1
+
+    Example 3:
+    Input: arr = [0,10,5,2]
+    Output: 1
+
+    Constraints:
+
+    3 <= arr.length <= 105
+    0 <= arr[i] <= 106
+    arr is guaranteed to be a mountain array.
+    */
+    bool _852 = true;
+    int peakIndexInMountainArray(vector<int>& arr) {
+        int left = 1, right = arr.size() - 2;
+
+        while(left < right) {
+            int mid = (left + right ) / 2;
+            // if(arr[mid] > arr[mid - 1] && arr[mid])
+            if(arr[mid] < arr[mid - 1]) {
+                right = mid - 1;
+            } else if (arr[mid] < arr[mid  + 1]) {
+                left = mid + 1;
+            } else {
+                return mid;
+            }
+        }
+        return left;
+    }
     /**
     904. Fruit Into Baskets
 
