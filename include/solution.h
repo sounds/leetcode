@@ -2343,6 +2343,34 @@ public:
         return isMirror_101(root, root);
     }
 
+    /*
+    */
+    bool _102 = true;
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int> > res;
+        if(root == NULL)
+            return res;
+        queue<TreeNode*> q;
+        q.push(NULL);
+        q.push(root);
+
+        while(q.size() > 1) {
+            TreeNode* tmp = q.front();
+            q.pop();
+            if(tmp == NULL) {
+                res.push_back(vector<int>());
+                q.push(NULL);
+                continue;
+            }
+            cout << tmp->val << " " << q.size() << endl;
+            res.back().push_back(tmp->val);
+            
+            if(tmp->left)   q.push(tmp->left);
+            if(tmp->right)  q.push(tmp->right);
+        }
+        return res;
+    }
+
     /**
     104. Maximum Depth of Binary Tree
     Given the root of a binary tree, return its maximum depth.
@@ -3353,6 +3381,52 @@ public:
         }
         return last;
     }
+    /*
+    209. Minimum Size Subarray Sum
+    Given an array of positive integers nums and a positive integer target, return the minimal length of a 
+    subarray
+    whose sum is greater than or equal to target. If there is no such subarray, return 0 instead.
+
+    Example 1:
+    Input: target = 7, nums = [2,3,1,2,4,3]
+    Output: 2
+    Explanation: The subarray [4,3] has the minimal length under the problem constraint.
+    Example 2:
+
+    Input: target = 4, nums = [1,4,4]
+    Output: 1
+    Example 3:
+
+    Input: target = 11, nums = [1,1,1,1,1,1,1,1]
+    Output: 0
+    
+
+    Constraints:
+
+    1 <= target <= 109
+    1 <= nums.length <= 105
+    1 <= nums[i] <= 104
+    */
+    bool _209 = true;
+    int minSubArrayLen(int target, vector<int>& nums) {
+        int i = 0, j = 0, res = INT_MAX, sum = nums[0];
+        while(i <= j && j < nums.size()) {
+            // cout << i << " " << j << " " << sum << endl;
+            if(sum >= target) {
+                res = min(j - i + 1, res);
+                sum -= nums[i++];
+            }
+            else if(sum < target) {
+                ++j;
+                if(j < nums.size())
+                    sum += nums[j];
+
+            } 
+        }
+        if(res == INT_MAX)  return 0;
+        return res;
+    }
+
     /**
     212. Word Search II
     Given a 2D board and a list of words from the dictionary, find all words in the board.
@@ -3382,7 +3456,7 @@ public:
 
     */
     vector<string> findWords(vector<vector<char>> &board, vector<string> &words)
-    {
+    {   
     }
 
     /**
