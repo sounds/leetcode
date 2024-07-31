@@ -2873,6 +2873,26 @@ public:
         }
         return;
     }
+    /**/
+    bool _134 = true;
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        vector<int> sum(gas.size(), 0);
+        sum[0] = gas[0] - cost[0];
+        for(int i = 1; i < gas.size(); ++i) {
+            sum[i] = gas[i] - cost[i] + sum[i - 1];
+        }
+        if(sum.back() < 0)
+            return -1;
+        int pos = 0, val = 0;
+        for(int i = 0; i < gas.size(); ++i) {
+            val += (gas[i] - cost[i]);
+            if(val < 0) {
+                pos = i + 1;
+                val = 0;
+            }
+        }
+        return pos;
+    }
 
     /**
     138. Copy List with Random Pointer
@@ -3208,6 +3228,45 @@ public:
         k %= nums.size();
         std::rotate(nums.begin(), nums.end() - k, nums.end());
     }
+    /*
+    198. House Robber
+    You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security systems connected and it will automatically contact the police if two adjacent houses were broken into on the same night.
+    Given an integer array nums representing the amount of money of each house, return the maximum amount of money you can rob tonight without alerting the police.
+
+    
+    Example 1:
+
+    Input: nums = [1,2,3,1]
+    Output: 4
+    Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3).
+    Total amount you can rob = 1 + 3 = 4.
+    Example 2:
+
+    Input: nums = [2,7,9,3,1]
+    Output: 12
+    Explanation: Rob house 1 (money = 2), rob house 3 (money = 9) and rob house 5 (money = 1).
+    Total amount you can rob = 2 + 9 + 1 = 12.
+    
+
+    Constraints:
+
+    1 <= nums.length <= 100
+    0 <= nums[i] <= 400
+    */
+    bool _198 = true;
+    int rob(vector<int>& nums) {
+        if(nums.size() == 1)
+            return nums[0];
+        vector<int> dp(nums.size(), 0);
+        dp[0] = nums[0];
+        dp[1] = max(nums[0], nums[1]);
+        for(int i = 2; i < nums.size(); ++i) {
+            dp[i] = max(dp[i - 2] + nums[i], dp[i - 1]);
+            // cout << dp[i] << endl;
+        }
+        return dp.back();
+    }
+
     /*
     199. Binary Tree Right Side View
     Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
@@ -4417,6 +4476,61 @@ public:
             swap(s[i], s[s.size() - i - 1]);
         }
     }
+    /*
+    347. Top K Frequent Elements
+    Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.
+
+    Example 1:
+
+    Input: nums = [1,1,1,2,2,3], k = 2
+    Output: [1,2]
+    Example 2:
+
+    Input: nums = [1], k = 1
+    Output: [1]
+    
+
+    Constraints:
+
+    1 <= nums.length <= 105
+    -104 <= nums[i] <= 104
+    k is in the range [1, the number of unique elements in the array].
+    It is guaranteed that the answer is unique.
+    
+
+    Follow up: Your algorithm's time complexity must be better than O(n log n), where n is the array's size.
+    */
+    bool _347 = true;
+    static  bool compare_347(pair<int,int> a, pair<int,int> b) {
+        return a.first > b.first;
+    }
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        vector<int> res;
+        
+        unordered_map<int ,int> um;
+        for(auto num:nums) {
+            if(um.find(num) != um.end())
+                um[num]++;
+            else
+                um[num] = 1;
+        }
+
+        // priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>>  q;
+        priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(&compare_347)>  q(&compare_347);
+        for(auto num:um) {
+            auto x = make_pair(num.second, num.first);
+            q.push(x);
+            if(q.size() > k)
+                q.pop();
+        }
+        while(!q.empty()) {
+            res.push_back(q.top().second);
+            q.pop();
+        }
+        return res;
+    }
+
+
     /**/
     bool _404 = true;
     int sumOfLeftLeaves(TreeNode* root) {
@@ -5517,6 +5631,66 @@ public:
         }
         return left;
     }
+    /*
+    875. Koko Eating Bananas
+    Koko loves to eat bananas. There are n piles of bananas, the ith pile has piles[i] bananas. The guards have gone and will come back in h hours.
+
+    Koko can decide her bananas-per-hour eating speed of k. Each hour, she chooses some pile of bananas and eats k bananas from that pile. If the pile has less than k bananas, she eats all of them instead and will not eat any more bananas during this hour.
+
+    Koko likes to eat slowly but still wants to finish eating all the bananas before the guards return.
+
+    Return the minimum integer k such that she can eat all the bananas within h hours.
+
+    
+
+    Example 1:
+
+    Input: piles = [3,6,7,11], h = 8
+    Output: 4
+    Example 2:
+
+    Input: piles = [30,11,23,4,20], h = 5
+    Output: 30
+    Example 3:
+
+    Input: piles = [30,11,23,4,20], h = 6
+    Output: 23
+    
+
+    Constraints:
+
+    1 <= piles.length <= 104
+    piles.length <= h <= 109
+    1 <= piles[i] <= 109
+    */
+    bool _875 = true;
+    bool check_875(vector<int>& piles, int h, double speed) {
+        int sum = 0;
+        for(auto i: piles) {
+            sum += ceil(i / speed);
+            if(sum > h)
+                return false;
+        }
+        return true;
+    }
+    int minEatingSpeed(vector<int>& piles, int h) {
+        int left = 1, right = 0;
+        for(auto i: piles)
+            right = max(i, right);
+        int res = right;
+        while(left <= right) {
+            int mid = (left + right) / 2;
+            // cout << left << " " << right << " " << mid << endl;
+            if(check_875(piles, h, mid)) {
+                right = mid - 1;
+                res = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return res;
+    }
+
     /**
     904. Fruit Into Baskets
 
@@ -5975,15 +6149,64 @@ public:
         for(int i = 1; i < text1.size() + 1; ++i) {
             for(int j = 1; j < text2.size() + 1; ++j) {
                 if(text1[i - 1] == text2[j - 1])
-                    dp[i][j] = max(dp[i - 1][j - 1]+1, max(dp[i-1][j],dp[i][j-1]));
+                    // dp[i][j] = max(dp[i - 1][j - 1]+1, max(dp[i-1][j],dp[i][j-1]));
+                    dp[i][j] = dp[i - 1][j - 1]+1;
                 else
-                    dp[i][j] = max(dp[i - 1][j - 1], max(dp[i-1][j],dp[i][j-1]));
+                    // dp[i][j] = max(dp[i - 1][j - 1], max(dp[i-1][j],dp[i][j-1]));
+                    dp[i][j] = max(dp[i-1][j],dp[i][j-1]);
                 // cout << dp[i][j] << " ";
             }
             // cout << endl;
         }
         return dp[text1.size()][text2.size()];
     }
+    /*
+    1481. Least Number of Unique Integers after K Removals
+    Given an array of integers arr and an integer k. Find the least number of unique integers after removing exactly k elements.
+
+    Example 1:
+
+    Input: arr = [5,5,4], k = 1
+    Output: 1
+    Explanation: Remove the single 4, only 5 is left.
+    Example 2:
+    Input: arr = [4,3,1,1,3,3,2], k = 3
+    Output: 2
+    Explanation: Remove 4, 2 and either one of the two 1s or three 3s. 1 and 3 will be left.
+    
+
+    Constraints:
+
+    1 <= arr.length <= 10^5
+    1 <= arr[i] <= 10^9
+    0 <= k <= arr.length
+    */
+    bool _1481 = true;
+    int findLeastNumOfUniqueInts(vector<int>& arr, int k) {
+        unordered_map<int ,int> um;
+        for(auto num:arr) {
+            if(um.find(num) != um.end())
+                um[num]++;
+            else
+                um[num] = 1;
+        }
+        if(k == 0)
+            return um.size();
+        vector<int> vec;
+        for(auto item:um) {
+            vec.push_back(item.second);
+        }
+        sort(vec.begin(), vec.end());
+        for(int i = 0; i < vec.size(); ++i) {
+            k -= vec[i];
+            if(k == 0) 
+                return vec.size() - i - 1;
+            if(k < 0)
+                return vec.size() - i;
+        }
+        return 0;
+    }
+
 
     bool _1262 = true;
     // int maxSumDivThree(vector<int>& nums) {
