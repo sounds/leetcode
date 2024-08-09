@@ -354,6 +354,8 @@ public:
         //            cout << i << " " << len[i] << endl;
         //        }
     }
+    
+
     /*
     # a # b # b # a # h #  o  #  p  #  x  #  p  #  o #
       0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
@@ -390,8 +392,33 @@ public:
     Write the code that will take a string and make this conversion given a number of rows:string convert(string text, int nRows);
     convert("PAYPALISHIRING", 3) should return "PAHNAPLSIIGYIR".
     **/
-    string convert(string s, int nRows)
-    {
+    bool _6 = false;
+    string convert(string s, int numRows) {
+        int len = s.length();
+        vector<vector<char> > vec(numRows, vector<char>(len, 0));
+
+        int i = -1, j = 0, pos = 0;
+        while(pos < s.length()) {
+            // cout << i << " " << j << " " << pos << endl;
+            
+            while(i + 1 < numRows && pos < s.length())
+                vec[++i][j] = s[pos++];
+            if(i - 1 < 0) {
+                --i;++j;
+            }
+            while(i - 1 >= 0 && pos < s.length())
+                vec[--i][++j] = s[pos++];
+            
+        }
+
+        string res = "";
+        for(auto v: vec) {
+            for(auto c: v) {
+                if(c != 0)
+                    res += c;
+            }
+        }
+        return res;
     }
 
     /**
@@ -1775,6 +1802,18 @@ public:
         }
         return ans;
     }
+    /**/
+
+    bool _58 = true;
+    int lengthOfLastWord(string s) {
+        int pos = 0;
+        while(s.back() == ' ')
+            s.pop_back();
+        if((pos = s.rfind(' ')) != string::npos)
+            return s.length() - pos - 1;
+        return s.length(); 
+    }
+
     /*
     59. Spiral Matrix II
     Given a positive integer n, generate an n x n matrix filled with elements from 1 to n2 in spiral order.
@@ -2500,7 +2539,67 @@ public:
         dfs_113(root, sum, 0, a, ans);
         return ans;
     }
+    /*
+    151. Reverse Words in a String
+    Given an input string s, reverse the order of the words.
 
+    A word is defined as a sequence of non-space characters. The words in s will be separated by at least one space.
+
+    Return a string of the words in reverse order concatenated by a single space.
+
+    Note that s may contain leading or trailing spaces or multiple spaces between two words. The returned string should only have a single space separating the words. Do not include any extra spaces.
+
+    
+    Example 1:
+
+    Input: s = "the sky is blue"
+    Output: "blue is sky the"
+    Example 2:
+
+    Input: s = "  hello world  "
+    Output: "world hello"
+    Explanation: Your reversed string should not contain leading or trailing spaces.
+    Example 3:
+
+    Input: s = "a good   example"
+    Output: "example good a"
+    Explanation: You need to reduce multiple spaces between two words to a single space in the reversed string.
+    
+
+    Constraints:
+
+    1 <= s.length <= 104
+    s contains English letters (upper-case and lower-case), digits, and spaces ' '.
+    There is at least one word in s.
+    
+
+    Follow-up: If the string data type is mutable in your language, can you solve it in-place with O(1) extra space?
+    */
+    bool _151 = true;
+    string reverseWords(string s) {
+        stack<string> q;
+        s += " ";
+        int pos = 0, e = 0;
+        while((e = s.find(" ", e)) != string::npos) {
+            // cout << pos << " " << e << " " << endl;
+            if(e - pos > 0) {
+                q.push(s.substr(pos, e - pos));
+                
+            }
+            ++e;
+            pos = e;
+        }
+        if(q.empty())
+            return "";
+        string res = q.top();
+        q.pop();
+        while(!q.empty()) {
+            res += " ";
+            res += q.top();
+            q.pop();
+        }
+        return res;
+    }
     /**
     121. Best Time to Buy and Sell Stock
     Say you have an array for which the ith element is the price of a given stock on day i.
@@ -5393,7 +5492,7 @@ public:
     nums is sorted in ascending order.
     */
     bool _704 = true;
-    int search(vector<int>& nums, int target) {
+    int search_704(vector<int>& nums, int target) {
         int left = 0, right = nums.size() - 1;
         while(left <= right) {
             int mid = (left + right) / 2;
